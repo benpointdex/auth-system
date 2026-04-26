@@ -1,0 +1,58 @@
+
+server:
+  port: 8081
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+
+    url: ${DB_URI}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update   # options: none, validate, update, create, create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      issuer: ${JWT_ISSUER:api.substring.com}
+      access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:600}
+      refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:86400}
+      refresh-token-cookie-name: ${JWT_REFRESH_COOKIE_NAME:refreshToken}
+      cookie-secure: ${JWT_COOKIE_SECURE:true}
+      cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+      cookie-same-site: ${JWT_COOKIE_SAME_SITE:lax}
+      cookie-domain: ${JWT_COOKIE_DOMAIN:localhost}
+
+
+
+    #    oauth2 configurations
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            #/login/oauth2/code/google
+            scope:
+              - email
+              - profile
+              - openid
+
+app:
+  cors:
+    front-end-url: ${FRONT_END_URL:http://localhost:3000,http://localhost:5173,http://localhost:5174}
+  auth:
+    frontend:
+      success-redirect: ${FRONT_END_SUCCESS_REDIRECT:http://localhost:5173/oauth2/success}
+      failure-redirect: ${FRONT_END_FAILURE_REDIRECT:http://localhost:5173/oauth2/failure}
