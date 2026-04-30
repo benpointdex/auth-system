@@ -1,0 +1,82 @@
+#version: "3.9"
+#
+## ===========================================================
+##  AuthSystem – Docker Compose
+##  Services:
+##    • postgres  – persistent PostgreSQL 16 instance
+##    • backend   – Spring Boot JWT/OAuth2 auth service
+## ===========================================================
+#
+#services:
+#
+#  # -----------------------------------------------------------
+#  # PostgreSQL database
+#  # -----------------------------------------------------------
+#  postgres:
+#    image: postgres:16-alpine
+#    container_name: auth_postgres
+#    restart: unless-stopped
+#    environment:
+#      POSTGRES_DB: ${POSTGRES_DB:-authdb}
+#      POSTGRES_USER: ${DB_USER:-authuser}
+#      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    ports:
+#      # Expose to host for local DB inspection (optional – remove in prod)
+#      - "5432:5432"
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-authuser} -d ${POSTGRES_DB:-authdb}"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#
+#  # -----------------------------------------------------------
+#  # Spring Boot backend
+#  # -----------------------------------------------------------
+#  backend:
+#    build:
+#      context: ./authBackendSystem
+#      dockerfile: Dockerfile
+#    container_name: auth_backend
+#    restart: unless-stopped
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    ports:
+#      - "${SERVER_PORT:-8081}:8081"
+#
+#    # ── Database ──────────────────────────────────────────────
+#    environment:
+#      # Construct the JDBC URL from individual parts so the
+#      # hostname always resolves to the compose service name.
+#      DB_URI: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-authdb}
+#      DB_USER: ${DB_USER:-authuser}
+#      DB_PASSWORD: ${DB_PASSWORD:-changeme}
+#
+#      # ── JWT ────────────────────────────────────────────────
+#      JWT_SECRET: ${JWT_SECRET}
+#      JWT_ISSUER: ${JWT_ISSUER:-api.substring.com}
+#      JWT_ACCESS_TTL_SECONDS: ${JWT_ACCESS_TTL_SECONDS:-600}
+#      JWT_REFRESH_TTL_SECONDS: ${JWT_REFRESH_TTL_SECONDS:-86400}
+#      JWT_REFRESH_COOKIE_NAME: ${JWT_REFRESH_COOKIE_NAME:-refreshToken}
+#      JWT_COOKIE_SECURE: ${JWT_COOKIE_SECURE:-true}
+#      JWT_COOKIE_HTTP_ONLY: ${JWT_COOKIE_HTTP_ONLY:-true}
+#      JWT_COOKIE_SAME_SITE: ${JWT_COOKIE_SAME_SITE:-lax}
+#      JWT_COOKIE_DOMAIN: ${JWT_COOKIE_DOMAIN:-localhost}
+#
+#      # ── Google OAuth2 ──────────────────────────────────────
+#      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+#      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+#
+#      # ── CORS / frontend redirects ──────────────────────────
+#      FRONT_END_URL: ${FRONT_END_URL:-http://localhost:3000}
+#      FRONT_END_SUCCESS_REDIRECT: ${FRONT_END_SUCCESS_REDIRECT:-http://localhost:3000/oauth2/success}
+#      FRONT_END_FAILURE_REDIRECT: ${FRONT_END_FAILURE_REDIRECT:-http://localhost:3000/oauth2/failure}
+#
+#    # Optional: tune JVM memory limits
+#    # environment (continued via JAVA_OPTS is set inside the Dockerfile)
+#
+#volumes:
+#  postgres_data:
+#    driver: local
