@@ -8,11 +8,11 @@
 
 **AuthPulse** is a clean, modern, and high-security full-stack authentication system built with a **Spring Boot 3** backend and a **React 19 (TypeScript + Vite)** frontend. It features standard-compliant dual-token authentication, background token rotation, Google Social Login, and a beautiful dashboard with session audit logs.
 
-🌐 **Live Backend Demo:** [https://auth-back-latest.onrender.com/](https://auth-back-latest.onrender.com/)
+🌐 **Live Backend:** [https://auth-back-latest.onrender.com/](https://auth-back-latest.onrender.com/)
 
 ---
 
-## ✨ Features at a Glance
+## ✨ Features
 
 *   **🔒 Double-Locked Security:** Uses short-lived Access Tokens for API requests and database-tracked, secure HttpOnly Cookies (Refresh Tokens) to manage sessions.
 *   **🔄 Refresh Token Rotation (RTR):** Automatically rotates refresh tokens on every refresh to prevent session theft.
