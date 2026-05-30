@@ -33,7 +33,7 @@
 
 ## 💻 Tech Stack
 
-*   **Backend:** Java 21, Spring Boot 3.5.11, Spring Security (OAuth2), JPA/Hibernate, PostgreSQL, JJWT.
+*   **Backend:** Java 21, Spring Boot 3.5.11, Spring Security (OAuth2), JPA/Hibernate, PostgreSQL, JWT,Lombok,Maven.
 *   **Frontend:** React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, Axios, Framer Motion.
 
 ---
